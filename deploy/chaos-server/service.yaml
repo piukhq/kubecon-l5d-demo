@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-server
+  namespace: default
+  labels:
+    app: chaos-server
+spec:
+  selector:
+    app: chaos-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 6502

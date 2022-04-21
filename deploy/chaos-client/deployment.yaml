@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-client
+  namespace: default
+  labels:
+    app: chaos-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chaos-client
+  template:
+    metadata:
+      labels:
+        app: chaos-client
+      annotations:
+        kubectl.kubernetes.io/default-container: app
+        linkerd.io/inject: enabled
+    spec:
+      serviceAccountName: chaos-client
+      containers:
+        - name: app
+          image: ghcr.io/binkhq/kubecon-l5d-demo:latest
+          args: [python, client.py]
+          env:
+            - name: URL
+              value: http://chaos-server.default.svc.cluster.local/api
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 32Mi
+            requests:
+              cpu: 100m
+              memory: 32Mi
